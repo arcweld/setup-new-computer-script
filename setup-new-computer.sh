@@ -1,17 +1,17 @@
 #!/bin/bash
 
 VERSION="v0.1"
-#===============================================================================
+#===================================================================
 # title           setup-new-computer.sh
 # author          arcweld
 #                 https://github.com/arcweld
-# based on original work by 
-#                 jkesler@vendasta.com, https://github.com/joelkesler
-# forked from     https://github.com/vendasta/setup-new-computer-script
-#===============================================================================
-#   A shell script to help with the quick setup and installation of tools and 
+# based on original work by
+#   jkesler@vendasta.com, https://github.com/joelkesler
+# forked from https://github.com/vendasta/setup-new-computer-script
+#===================================================================
+#   A shell script to help with the quick setup and installation of tools and
 #   applications for new laptops
-# 
+#
 #   Quick Instructions:
 #
 #   1. Make the script executable:
@@ -22,23 +22,19 @@ VERSION="v0.1"
 #
 #   3. Some installs will need your password
 #
-#   4. You will be promted to fill out your git email and name. 
+#   4. You will be promted to fill out your git email and name.
 #      Use the email and name you use for Github
 #
 #   5. Follow the Post Installation Instructions in the Readme:
 README="https://github.com/arcweld/setup-new-computer-script#post-installation-instructions"
-#  
+#
 #===============================================================================
 
 
-# IDEs to make availabe. Please also adjust code to brew cask install
+# Tools to make available. Please also adjust code to sudo apt-get  install
 options[0]="Visual Studio Code";    devtoolchoices[0]="+"
-options[1]="Jetbrains Toolbox";     devtoolchoices[6]=""
-options[2]="Atom";                  devtoolchoices[1]=""
-# options[3]="Goland";                devtoolchoices[2]=""
-# options[4]="Webstorm";              devtoolchoices[3]=""
-# options[5]="Sublime Text";          devtoolchoices[4]=""
-# options[6]="iTerm2";                devtoolchoices[5]=""
+options[1]="Atom";                  devtoolchoices[1]=""
+options[2]="Jetbrains IntelliJ";     devtoolchoices[2]=""
 
 
 #===============================================================================
@@ -91,10 +87,10 @@ cat << "EOT"
 EOT
 }
 
-showIDEMenuLoop() {
+showToolsMenuLoop() {
     # from https://serverfault.com/a/777849
     printLogo
-    printHeading "Select Optional IDEs and Tools"
+    printHeading "Select Tech Tools"
     printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
         echo ""
         for NUM in "${!options[@]}"; do
@@ -114,50 +110,39 @@ cat << EOT >> ~/.bash_profile
 # Supress "Bash no longer supported" message
 export BASH_SILENCE_DEPRECATION_WARNING=1
 
-# Setting up Path for Homebrew
+# Setting up Path for Linux
 export PATH=/usr/local/sbin:\$PATH
-
-# Setup Path for Local Python Installs
-export PATH=\$PATH:\$HOME/Library/Python/2.7/bin
 
 # Bash Autocompletion
-if type brew &>/dev/null; then
-  HOMEBREW_PREFIX="\$(brew --prefix)"
-  if [[ -r "\${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]]; then
-    source "\${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
-  else
-    for COMPLETION in "\${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
-      [[ -r "\$COMPLETION" ]] && source "\$COMPLETION"
-    done
-  fi
+if [ -f "/usr/bin/apt"]; then
+  sudo apt update
+  sudo apt install bash-completion
+  [ -e '/etc/profile.d/bash_completion.sh'] && [source /etc/profile.d/bash_completion.sh]
+  [ -e '/etc/bash_completion.sh'] && [source /etc/bash_completion.sh]
 fi
 
 # Google Cloud SDK
-[ -e "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc" ] && \
-    source "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
-[ -e "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc" ] && \
-    source "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
+# The next line updates PATH for the Google Cloud SDK.
+    if [ -f '\$HOME/google-cloud-sdk/path.bash.inc' ]; then . '\$HOME/google-cloud-sdk/path.bash.inc'; fi
+# The next line enables shell command completion for gcloud.
+    if [ -f '\$HOME/google-cloud-sdk/completion.bash.inc' ]; then . '\$HOME/google-cloud-sdk/completion.bash.inc'; fi
 
 # NVM
-# This needs to be after "Setting up Path for Homebrew" to override Homebrew Node
+# Is this needed on Linux/Debian/Ubuntu?
 export NVM_DIR="\$HOME/.nvm"
 [ -s "\$NVM_DIR/nvm.sh" ] && \
     source "\$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "\$NVM_DIR/bash_completion" ] && \
     source "\$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-# Node
-# Increases the default memory limit for Node, so larger Anglar prjects can be built
-export NODE_OPTIONS=--max_old_space_size=8192
-
-# Update Node 14 and reinstall previous packages
-node-upgrade() {
-    prev_ver=\$(nvm current)
-    nvm install 14
-    nvm reinstall-packages "\$prev_ver"
-    nvm uninstall "\$prev_ver"
-    nvm cache clear
-}
+# aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+alias python='python3'
+alias pip='pip3'
+alias ipython='ipython3'
+alias ic="ibmcloud"
 
 # --------------------------------------------------------------------
 # End autogenerated content from setup-new-computer.sh   $VERSION
@@ -167,100 +152,7 @@ node-upgrade() {
 EOT
 }
 
-writetoZshProfile() {
-cat << EOT >> ~/.zprofile
-
-
-# --------------------------------------------------------------------
-# Begin ZSH autogenerated content from setup-new-computer.sh   $VERSION
-# --------------------------------------------------------------------
-
-# Setting up Path for Homebrew
-export PATH=/usr/local/sbin:\$PATH
-
-# Setup Path for Local Python Installs
-export PATH=\$PATH:\$HOME/Library/Python/2.7/bin
-
-# Brew Autocompletion
-if type brew &>/dev/null; then
-    fpath+=\$(brew --prefix)/share/zsh/site-functions
-fi
-
-# Zsh Autocompletion
-# Note: must run after Brew Autocompletion
-autoload -U +X compinit && compinit
-autoload -U +X bashcompinit && bashcompinit
-fpath=(/usr/local/share/zsh-completions \$fpath)
-
-# Google Cloud SDK
-[ -e "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc" ] && \
-    source "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-[ -e "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc" ] && \
-    source "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
-
-# Golang
-export GOPRIVATE="github.com/vendasta"
-export GOPROXY="direct"
-export GO111MODULE="on"
-export GOPATH=\$HOME/go
-export GOBIN=\$GOPATH/bin
-export PATH=\$PATH:\$GOBIN
-
-# NVM 
-# This needs to be after "Setting up Path for Homebrew" to override Homebrew Node
-export NVM_DIR="\$HOME/.nvm"
-[ -s "\$NVM_DIR/nvm.sh" ] && \
-    source "\$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "\$NVM_DIR/bash_completion" ] && \
-    source "\$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Node
-# Increases the default memory limit for Node, so larger Anglar prjects can be built
-export NODE_OPTIONS=--max_old_space_size=8192
-
-# Update Node 14 and reinstall previous packages
-node-upgrade() {
-    prev_ver=\$(nvm current)
-    nvm install 14
-    nvm reinstall-packages "\$prev_ver"
-    nvm uninstall "\$prev_ver"
-    nvm cache clear
-}
-
-# --------------------------------------------------------------------
-# End autogenerated content from setup-new-computer.sh   $VERSION
-# --------------------------------------------------------------------
-
-
-EOT
-}
-
-
-writetoHuskrc() {
-cat << EOT >> ~/.huskyrc
-
-
-# --------------------------------------------------------------------
-# Begin Husky autogenerated content from setup-new-computer.sh   $VERSION
-# --------------------------------------------------------------------
-
-# This loads nvm.sh and sets the correct PATH before running hook
-
-export NVM_DIR="\$HOME/.nvm"
-[ -s "\$NVM_DIR/nvm.sh" ] && \
-    source "\$NVM_DIR/nvm.sh"
-   
-
-# --------------------------------------------------------------------
-# End autogenerated content from setup-new-computer.sh   $VERSION
-# --------------------------------------------------------------------
-
-
-EOT
-}
-
-
-# Get root user for later. Brew needs the user to be admin for 
+# Get root user for later. Brew needs the user to be admin for
 sudo ls > /dev/null
 
 
@@ -271,8 +163,8 @@ sudo ls > /dev/null
 
 # Show IDE Selection Menu
 clear
-while 
-    showIDEMenuLoop && \
+while
+    showToolsMenuLoop && \
     read -r -e -p "Enable or Disable by typing number. Hit ENTER to continue " \
     -n1 SELECTION && [[ -n "$SELECTION" ]]; \
 do
@@ -299,13 +191,10 @@ printDivider
 
 
 # Create .bash_profile and .zprofile if they dont exist
-printHeading "Prep Bash and Zsh"
+printHeading "Prep Bash"
 printDivider
     echo "✔ Touch ~/.bash_profile"
         touch ~/.bash_profile
-printDivider
-    echo "✔ Touch ~/.zprofile"
-        touch ~/.zprofile
 printDivider
     if grep --quiet "setup-new-computer.sh" ~/.bash_profile; then
         echo "✔ .bash_profile already modified. Skipping"
@@ -314,187 +203,73 @@ printDivider
         echo "✔ Added to .bash_profile"
     fi
 printDivider
-    # Zsh profile
-    if grep --quiet "setup-new-computer.sh" ~/.zprofile; then
-        echo "✔ .zprofile already modified. Skipping"
-    else
-        writetoZshProfile
-        echo "✔ Added to .zprofile"
-    fi
-printDivider
-    echo "(zsh) Rebuild zcompdump"
-    rm -f ~/.zcompdump
-printDivider
-    echo "(zsh) Fix insecure directories warning"
-    chmod go-w "$(brew --prefix)/share"
-printDivider
 
 
 #===============================================================================
 #  Installer: Main Payload
 #===============================================================================
 
-
-# Install xcode cli development tools
-printHeading "Installing xcode cli development tools"
-printDivider
-    xcode-select --install && \
-        read -n 1 -r -s -p $'\n\nWhen Xcode cli tools are installed, press ANY KEY to continue...\n\n' || \
-            printDivider && echo "✔ Xcode cli tools already installed. Skipping"
-printDivider
-
-
-# Install Brew
-printHeading "Installing Homebrew"
-printDivider
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-printDivider
-    echo "✔ Setting Path to /usr/local/bin:\$PATH"
-        export PATH=/usr/local/bin:$PATH
 printDivider
 
 
 # Install Utilities
-printHeading "Installing Brew Packages"
-    printStep "Bash"                        "brew install bash"
-    printStep "bash-completion"             "brew install bash-completion"
-    printStep "zsh-completions"             "brew install zsh-completions"
-    printStep "Git"                         "brew install git"
-    printStep "Github CLI - gh"             "brew install gh"
-    printStep "Hub for Github"              "brew install hub"
-    printStep "Ruby"                        "brew install ruby"
-    printStep "ack"                         "brew install ack"
-    printStep "Silver Searcher - ag"        "brew install ag"
+printHeading "Installing Packages"
+    printStep "Git"                         "sudo apt-get install git"
+    printStep "Github CLI - gh"             "sudo apt-get install gh"
 printDivider
-
 
 # Install  Apps
 printHeading "Installing Applications"
-    printStep "Slack"                       "brew install --cask slack"
-    printStep "Firefox"                     "brew install --cask firefox"
-    printStep "Google Chrome"               "brew install --cask google-chrome"
-    printStep "Docker for Mac"              "brew install --cask docker"
-    printStep "Postman"                     "brew install --cask postman"
+    printStep "Slack"                       "sudo apt-get install slack"
+    printStep "Firefox"                     "sudo apt-get install firefox"
+    printStep "Google Chrome"               "sudo apt-get install google-chrome"
+    printStep "Docker"              "sudo apt-get install docker"
+    printStep "Postman"                     "sudo apt-get install postman"
     # Install Visual Studio Code
     if [[ "${devtoolchoices[0]}" == "+" ]]; then
-        printStep "Visual Studio Code"      "brew install --cask visual-studio-code"
+        printStep "Visual Studio Code"      "sudo apt-get install visual-studio-code"
     fi
-    # Install Jetbrains Toolbox
+    # Install Jetbrains IntelliJ
     if [[ "${devtoolchoices[1]}" == "+" ]]; then
-        printStep "Jetbrains Toolbox"       "brew install --cask jetbrains-toolbox"
+        printStep "Jetbrains Toolbox"       "sudo apt-get install jetbrains-toolbox"
     fi
     # Install PyCharm
     if [[ "${devtoolchoices[2]}" == "+" ]]; then
-        printStep "PyCharm"                 "brew install --cask pycharm"
+        printStep "PyCharm"                 "sudo apt-get install pycharm"
     fi
     # Install Goland
     if [[ "${devtoolchoices[3]}" == "+" ]]; then
-        printStep "Goland"                  "brew install --cask goland"
+        printStep "Goland"                  "sudo apt-get install goland"
     fi
     # Install WebStorm
     if [[ "${devtoolchoices[4]}" == "+" ]]; then
-        printStep "WebStorm"                "brew install --cask webstorm"
+        printStep "WebStorm"                "sudo apt-get install webstorm"
     fi
     # Install Sublime Text
     if [[ "${devtoolchoices[5]}" == "+" ]]; then
-        printStep "Sublime Text"            "brew install --cask sublime-text"
+        printStep "Sublime Text"            "sudo apt-get install sublime-text"
     fi
     # Install iTerm2
     if [[ "${devtoolchoices[6]}" == "+" ]]; then
-        printStep "iTerm2"                  "brew install --cask iterm2"
+        printStep "iTerm2"                  "sudo apt-get install iterm2"
     fi
-printDivider
-
-
-#Install Go
-# TODO: check with @cpenner about current best way to install
-printHeading "Installing Go"
-    printDivider
-        echo "✔ Creating Go directory in home folder [~/go]"
-            mkdir ~/go
-    printStep "Go"            "brew install go"
-    printDivider
-        echo "✔ Setting GOPRIVATE enviromental variable"
-            go env -w GOPRIVATE="github.com/vendasta"
-printDivider
-
-
-# Install Mac OS Python Pip and Packages
-# Run this before "Homebrew Python 3" to make sure "Homebrew Python 3" will overwrite pip3
-printHeading "Installing Mac OS Python"
-    printDivider
-        echo "Installing Pip for MacOS Python..."
-            sudo -H /usr/bin/easy_install pip==20.3.4
-    printDivider
-        echo "Upgrading Pip for MacOS Python..."
-            sudo -H pip install --upgrade "pip < 21.0"
-    printStep "Invoke for MacOS Python"          "sudo -H pip install --quiet invoke"
-    printStep "Requests for MacOS Python"        "sudo -H pip install --quiet requests"
-    printStep "lxml for MacOS Python"            "sudo -H pip install --quiet lxml"
-    printStep "pyCrypto for MacOS Python"        "sudo -H pip install --quiet pyCrypto"
-    printStep "Virtualenv for MacOS Python"      "sudo -H pip install --quiet virtualenv"
-printDivider
-
-
-# Install Homebrew Python 3
-printHeading "Installing Homebrew Python 3"
-    printStep "Homebrew Python 3 with Pip"       "brew reinstall python"
-printDivider
-
-
-# Install Node
-printHeading "Installing Node and Angular CLI through NVM"
-    printDivider
-        getLastestNVM() {
-            # From https://gist.github.com/lukechilds/a83e1d7127b78fef38c2914c4ececc3c
-            # Get latest release from GitHub api | Get tag line | Pluck JSON value
-            curl --silent "https://api.github.com/repos/nvm-sh/nvm/releases/latest" | 
-                grep '"tag_name":' |
-                sed -E 's/.*"([^"]+)".*/\1/'
-        }
-        echo "✔ Current NVM is $(getLastestNVM)"
-    printDivider
-        echo "Installing NVM (Node Version Manager) $(getLastestNVM)..."
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/$(getLastestNVM)/install.sh | bash
-    printDivider
-        echo "✔ Loading NVM into PATH"
-        export NVM_DIR="$HOME/.nvm"
-        [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-    printDivider
-        echo "Installing Node..."
-        nvm install 14
-    printStep "Angular CLI"             "npm install -g @angular/cli"
-    printStep "NX"                      "npm install -g nx"
-    printStep "Husky"                   "npm install -g husky"
-    printStep "Node Sass"               "npm install -g node-sass"
-    printStep "Node Gyp"                "npm install -g node-gyp"
-    printDivider
-        echo "✔ Touch ~/.huskyrc"
-            touch ~/.huskyrc
-    printDivider
-        # Husky profile
-        if grep --quiet "nvm" ~/.huskyrc; then
-            echo "✔ .huskyrc already includes nvm. Skipping"
-        else
-            writetoHuskrc
-            echo "✔ Add nvm to .huskyrc"
-        fi
 printDivider
 
 
 # Install Google Cloud SDK and Components
+# TODO: refactor from mac to nix
 printHeading "Install Google Cloud SDK and Components"
-    printStep "Google Cloud SDK"        "brew install --cask google-cloud-sdk"
+    printStep "Google Cloud SDK"        "sudo apt-get install google-cloud-sdk"
     printDivider
         echo "✔ Prepping Autocompletes and Paths"
-        source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
-        source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
+        source "$(sudo apt-get --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
+        source "$(sudo apt-get --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
     printDivider
         if [ -e ~/google-cloud-sdk ]; then
             echo "✔ ~/google-cloud-sdk exists. Skipping"
         else
             echo "✔ Creating ~/google-cloud-sdk symlink"
-            ln -s "$(brew --prefix)/Caskroom/google-cloud-sdk" ~/google-cloud-sdk &>/dev/null
+            ln -s "$(sudo apt-get --prefix)/Caskroom/google-cloud-sdk" ~/google-cloud-sdk &>/dev/null
             # make a convenience symlink at the install path for google-cloud-sdk when installed manually
         fi
     printStep "App Engine - Go"             "gcloud components install app-engine-go --quiet"
@@ -504,6 +279,14 @@ printHeading "Install Google Cloud SDK and Components"
     printStep "Docker Credentials"          "gcloud components install docker-credential-gcr --quiet"
 printDivider
 
+
+# TODO: install python, pip
+# TODO: install podman, Anaconda
+# TODO: install Linode, R,
+# TODO: install firefox, chrome, chromium
+# TODO: install Authy, Joplin, Nextcloud, Zotero, Republic Wireless, TopTracker, Pomatez, Microsoft Teams, Pithos, MEGAsync, KeePass2, LibreOffice
+
+# TODO: install FreeCAD, Cura, VLC, ImageMagick, GIMP
 
 # Install System Tweaks
 printHeading "System Tweaks"
@@ -518,7 +301,7 @@ printHeading "System Tweaks"
     echo "✔ General: Avoid creating .DS_Store files on network volumes"
         defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
     printDivider
-        
+
     echo "✔ Typing: Disable smart quotes and dashes as they cause problems when typing code"
         defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
         defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
@@ -534,7 +317,7 @@ printHeading "System Tweaks"
     echo "✔ Finder: Show the ~/Library folder"
         chflags nohidden ~/Library
     printDivider
-        
+
     echo "✔ Safari: Enable Safari’s Developer Settings"
         defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
         defaults write com.apple.Safari IncludeDevelopMenu -bool true
@@ -542,7 +325,7 @@ printHeading "System Tweaks"
         defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
         defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
     printDivider
-    
+
     echo "✔ Chrome: Disable the all too sensitive backswipe on Trackpads and Magic Mice"
         defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
         defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -bool false

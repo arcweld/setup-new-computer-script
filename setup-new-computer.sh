@@ -1,13 +1,16 @@
 #!/bin/bash
 
-VERSION="v2.0"
+VERSION="v0.1"
 #===============================================================================
 # title           setup-new-computer.sh
-# author          jkesler@vendasta.com
-#                 https://github.com/joelkesler
+# author          arcweld
+#                 https://github.com/arcweld
+# based on original work by 
+#                 jkesler@vendasta.com, https://github.com/joelkesler
+# forked from     https://github.com/vendasta/setup-new-computer-script
 #===============================================================================
 #   A shell script to help with the quick setup and installation of tools and 
-#   applications for new developers at Vendasta.
+#   applications for new laptops
 # 
 #   Quick Instructions:
 #
@@ -23,7 +26,7 @@ VERSION="v2.0"
 #      Use the email and name you use for Github
 #
 #   5. Follow the Post Installation Instructions in the Readme:
-README="https://github.com/vendasta/setup-new-computer-script#post-installation-instructions"
+README="https://github.com/arcweld/setup-new-computer-script#post-installation-instructions"
 #  
 #===============================================================================
 
@@ -31,11 +34,11 @@ README="https://github.com/vendasta/setup-new-computer-script#post-installation-
 # IDEs to make availabe. Please also adjust code to brew cask install
 options[0]="Visual Studio Code";    devtoolchoices[0]="+"
 options[1]="Jetbrains Toolbox";     devtoolchoices[6]=""
-options[2]="Pycharm";               devtoolchoices[1]=""
-options[3]="Goland";                devtoolchoices[2]=""
-options[4]="Webstorm";              devtoolchoices[3]=""
-options[5]="Sublime Text";          devtoolchoices[4]=""
-options[6]="iTerm2";                devtoolchoices[5]=""
+options[2]="Atom";                  devtoolchoices[1]=""
+# options[3]="Goland";                devtoolchoices[2]=""
+# options[4]="Webstorm";              devtoolchoices[3]=""
+# options[5]="Sublime Text";          devtoolchoices[4]=""
+# options[6]="iTerm2";                devtoolchoices[5]=""
 
 
 #===============================================================================
@@ -73,12 +76,11 @@ printStep() {
 
 printLogo() {
 cat << "EOT"
-                      _           _        
-                     | |         | |       
- __   _____ _ __   __| | __ _ ___| |_ __ _ 
- \ \ / / _ \ '_ \ / _` |/ _` / __| __/ _` |
-  \ V /  __/ | | | (_| | (_| \__ \ || (_| |
-   \_/ \___|_| |_|\__,_|\__,_|___/\__\__,_|
+
+   __ _ _ __ _____      _____| | __| |
+  / _` | '__/ __\ \ /\ / / _ \ |/ _` |
+ | (_| | | | (__ \ V  V /  __/ | (_| |
+  \__,_|_|  \___| \_/\_/ \___|_|\__,_|
  ------------------------------------------
     Q U I C K   S E T U P   S C R I P T
 
@@ -135,15 +137,6 @@ fi
     source "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
 [ -e "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc" ] && \
     source "\$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
-
-# Golang
-export GOPRIVATE="github.com/vendasta"
-export GOPROXY="direct"
-export GO111MODULE="on"
-export GOPATH=\$HOME/go
-export GOBIN=\$GOPATH/bin
-export PATH=\$PATH:\$GOBIN
-
 
 # NVM
 # This needs to be after "Setting up Path for Homebrew" to override Homebrew Node

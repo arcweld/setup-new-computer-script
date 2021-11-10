@@ -1,5 +1,5 @@
-# Setup a New Developer Computer
-This script will help with the quick setup and installation of tools and applications for new developers at Vendasta. Tested in Mac OS 10.14, 10.15, and 11. This script hasn't been tested on M1 Macs. 
+# Setup a New Computer
+This script will help with the quick setup and installation of tools and applications for new Linux laptops. 
 
 You can run this script multiple times without issue. You can also run it on a partially set-up computer and it will only install what is missing.
 
@@ -508,7 +508,7 @@ brew install --cask google-chrome
 
 
 <details>
-  <summary>Docker for Mac</summary>
+  <summary>Docker</summary>
 
 ```sh
 brew install --cask docker
@@ -762,14 +762,11 @@ The following examples were helpful in building this script.
   https://github.com/thoughtbot/laptop
 
 
-## Todo: Prep for M1 compatibility 
+## TODO: replace all macOS/zsh particulars
 
-- Install Rosetta 2 (Is it not installed by default or automatically?)\
-  `/usr/sbin/softwareupdate --install-rosetta` \
-  or `sudo /usr/sbin/softwareupdate --install-rosetta agree-to-license`
-
-- Set the new M1 location of homebrew up in the path \
-  `/opt/homebrew/bin`
+## TODO: fully define tech stack
+	   
+## TODO: GCP, Linode, IBM, Azure
 
 - More reading:
   - https://www.wisdomgeek.com/development/installing-intel-based-packages-using-homebrew-on-the-m1-mac/

@@ -281,11 +281,24 @@ printDivider
 
 
 # TODO: install python, pip
-# TODO: install podman, Anaconda
+# TODO: install gdebi ::
+        # sudo apt install gdebi
+# TODO: install podman
+# TODO: install Anaconda ::
+        # if [ python -V == ]
+        # curl https://repo.anaconda.com/miniconda/Miniconda3-py38_4.10.3-Linux-x86_64.sh --output miniconda-installer.sh
+        # echo Verify hash of downloaded file (Miniconda3, Python 3.8)
+        # xdg-open https://docs.conda.io/en/latest/miniconda.html#linux-installers
+        # sha256sum miniconda-installer.sh 
+        # 935d72deb16e42739d69644977290395561b7a6db059b316958d97939e9bdf3d
+        # bash miniconda-installer.sh
 # TODO: install Linode, R,
-# TODO: install firefox, chrome, chromium
+# TODO: install firefox, chrome, chromium,
+# TODO: install atom ::
+        # curl https://atom-installer.github.com/v1.58.0/atom-amd64.deb --output atom-amd64.deb
+        # sudo gdebi atom-amd64.deb
+        # rm atom-amd64.deb
 # TODO: install Authy, Joplin, Nextcloud, Zotero, Republic Wireless, TopTracker, Pomatez, Microsoft Teams, Pithos, MEGAsync, KeePass2, LibreOffice
-
 # TODO: install FreeCAD, Cura, VLC, ImageMagick, GIMP
 
 # Install System Tweaks

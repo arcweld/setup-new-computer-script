@@ -728,3 +728,53 @@ The following examples were helpful in building this script.
 - More reading:
   - https://www.wisdomgeek.com/development/installing-intel-based-packages-using-homebrew-on-the-m1-mac/
   - https://github.com/Homebrew/discussions/discussions/417
+
+	   
+	   
+	   
+	   
+<!--- 
+Software Inventory: 
+	   VM
+Anaconda
+Nextcloud
+Git
+Node
+podman
+Docker
+	   
+Software Inventory: 
+	   Laptop
+Browsers
+- firefox
+- chrome
+- chromium
+Libreoffice
+ImageMagick
+Joplin
+KeePass2
+MEGAsync
+Pithos
+Microsoft Teams
+Pomatez
+Postman
+TopTracker
+VSCode
+R
+Republic Wireless
+Slack
+Zoom
+VLC media player
+Zotero
+IntelliJ
+Ultilimaker_Cura
+FreeCAD
+Google Cloud SDK
+Linode CLI
+Nextcloud
+Atom
+Authy
+Git
+Node
+Docker
+	   

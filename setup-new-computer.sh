@@ -158,7 +158,8 @@ EOT
 }
 
 # Get root user for later.
-sudo apt update -qq > /dev/null
+# sudo apt update -qq > /dev/null
+sudo apt update -qq && sudo apt upgrade -y
 
 
 #===============================================================================
@@ -258,7 +259,8 @@ printHeading "Installing Selected Environments"
       printStep "KeePassXC"               "snap install keepassxc"
       printStep "Authy"                   "snap install authy"
       printStep "Joplin"                  "snap install joplin-desktop"
-      printStep "Republic Wireless"       "echo 'in dev'"
+      printStep "NextCloud"               "snap install nextcloud"
+      # printStep "Republic Wireless"       "??"
 
     fi
 

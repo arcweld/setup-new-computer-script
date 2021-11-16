@@ -235,7 +235,7 @@ printDivider
 printHeading "Installing Packages"
     printStep "wget"                        "sudo apt-get install wget"
     printStep "snap"                        "sudo apt-get install snapd"
-    printStep "dirmngr"                        "sudo apt install --no-install-recommends software-properties-common dirmngr"
+    printStep "dirmngr"                     "sudo apt install --no-install-recommends software-properties-common dirmngr"
     printStep "Git"                         "sudo apt-get install git"
     printStep "Github CLI - gh"             "curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg && \
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \

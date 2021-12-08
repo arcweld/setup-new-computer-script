@@ -235,12 +235,12 @@ printDivider
 printHeading "Installing Packages"
     printStep "wget"                        "sudo apt-get install wget"
     printStep "snap"                        "sudo apt-get install snapd"
-    printStep "dirmngr"                     "sudo apt install --no-install-recommends software-properties-common dirmngr"
+#    printStep "dirmngr"                     "sudo apt install --no-install-recommends software-properties-common dirmngr"
     printStep "Git"                         "sudo apt-get install git"
-    printStep "Github CLI - gh"             "curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg && \
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
-    sudo apt update && \
-    sudo apt install gh"
+#    printStep "Github CLI - gh"             "curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+#    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+#    sudo apt update && \
+#    sudo apt install gh"
 printDivider
 
 printHeading "Installing Selected Environments"
@@ -249,7 +249,7 @@ printHeading "Installing Selected Environments"
       printHeading "Installing base laptop utilities"
       printStep "Zoom"                        "wget https://zoom.us/client/latest/zoom_amd64.deb --output-document=./zoom_amd64.deb && sudo apt install ./zoom_amd64.deb && rm ./zoom_amd64.deb"
       printStep "Google Chrome"               "sudo apt-get install google-chrome-stable"
-      printStep "Google Chromium"             "snap install chromium"
+#      printStep "Google Chromium"             "snap install chromium"
     fi
 
 # Install advanced laptop utilities
@@ -269,7 +269,6 @@ printHeading "Installing Selected Environments"
       printHeading "Installing base development utilities"
       printStep "Atom"                    "wget https://atom.io/download/deb --output=./atom.deb && sudo apt-get install ./atom.deb && rm ./atom.deb"
       printStep "VSCode"                  "snap install code"
-      printStep "Slack"                   "snap install slack"
     fi
 
 # Install machine learning development utilities
@@ -284,8 +283,9 @@ printHeading "Installing Selected Environments"
 # Install web development utilities
     if [[ "${devtoolchoices[4]}" == "+" ]]; then
       printHeading "Installing web development utilities"
+#      printStep "node"               "curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash - && sudo apt-get install -y nodejs"
+      printStep "nvm"                "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash"
       printStep "npm"               "sudo apt-get install npm"
-      printStep "node"               "curl -fsSL https://deb.nodesource.com/setup_17.x | sudo -E bash - && sudo apt-get install -y nodejs"
       printStep "yarn"               "npm install -g yarn"
       printStep "IntelliJ Idea"      "snap install intellij-idea-community"
     fi
@@ -308,35 +308,12 @@ printHeading "Installing Selected Environments"
 
 
 printHeading "Installing Applications"
-    printStep "Slack"                       "sudo apt-get install slack"
+    printStep "Slack"                       "sudo apt-get install slack-desktop"
     printStep "Docker"                      "sudo apt-get install docker"
+    printStep "Docker-compose"                      "sudo apt-get install docker-compose"
+    printStep "Podman"                      "sudo apt-get install podman"
     printStep "Postman"                     "sudo apt-get install postman"
-
     printStep "Visual Studio Code"      "sudo apt-get install visual-studio-code"
-    # Install Jetbrains IntelliJ
-    if [[ "${devtoolchoices[1]}" == "+" ]]; then
-        printStep "Jetbrains Toolbox"       "sudo apt-get install jetbrains-toolbox"
-    fi
-    # Install PyCharm
-    if [[ "${devtoolchoices[2]}" == "+" ]]; then
-        printStep "PyCharm"                 "sudo apt-get install pycharm"
-    fi
-    # Install Goland
-    if [[ "${devtoolchoices[3]}" == "+" ]]; then
-        printStep "Goland"                  "sudo apt-get install goland"
-    fi
-    # Install WebStorm
-    if [[ "${devtoolchoices[4]}" == "+" ]]; then
-        printStep "WebStorm"                "sudo apt-get install webstorm"
-    fi
-    # Install Sublime Text
-    if [[ "${devtoolchoices[5]}" == "+" ]]; then
-        printStep "Sublime Text"            "sudo apt-get install sublime-text"
-    fi
-    # Install iTerm2
-    if [[ "${devtoolchoices[6]}" == "+" ]]; then
-        printStep "iTerm2"                  "sudo apt-get install iterm2"
-    fi
 printDivider
 
 
@@ -344,19 +321,6 @@ printDivider
 # TODO: refactor from mac to nix
 printHeading "Install Google Cloud SDK and Components"
     printStep "Google Cloud SDK"        "sudo apt-get install google-cloud-sdk"
-    printDivider
-        echo "✔ Prepping Autocompletes and Paths"
-        source "$(sudo apt-get --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
-        source "$(sudo apt-get --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.bash.inc"
-    printDivider
-        if [ -e ~/google-cloud-sdk ]; then
-            echo "✔ ~/google-cloud-sdk exists. Skipping"
-        else
-            echo "✔ Creating ~/google-cloud-sdk symlink"
-            ln -s "$(sudo apt-get --prefix)/Caskroom/google-cloud-sdk" ~/google-cloud-sdk &>/dev/null
-            # make a convenience symlink at the install path for google-cloud-sdk when installed manually
-        fi
-    printStep "App Engine - Go"             "gcloud components install app-engine-go --quiet"
     printStep "App Engine - Python"         "gcloud components install app-engine-python --quiet"
     printStep "App Engine - Python Extras"  "gcloud components install app-engine-python-extras --quiet"
     printStep "Kubectl"                     "gcloud components install kubectl --quiet"
@@ -388,53 +352,6 @@ printDivider
 # Install System Tweaks
 printHeading "System Tweaks"
     printDivider
-    echo "✔ General: Expand save and print panel by default"
-        defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode -bool true
-        defaults write NSGlobalDomain NSNavPanelExpandedStateForSaveMode2 -bool true
-        defaults write NSGlobalDomain PMPrintingExpandedStateForPrint -bool true
-        defaults write NSGlobalDomain PMPrintingExpandedStateForPrint2 -bool true
-    echo "✔ General: Save to disk (not to iCloud) by default"
-        defaults write NSGlobalDomain NSDocumentSaveNewDocumentsToCloud -bool false
-    echo "✔ General: Avoid creating .DS_Store files on network volumes"
-        defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
-    printDivider
-
-    echo "✔ Typing: Disable smart quotes and dashes as they cause problems when typing code"
-        defaults write NSGlobalDomain NSAutomaticQuoteSubstitutionEnabled -bool false
-        defaults write NSGlobalDomain NSAutomaticDashSubstitutionEnabled -bool false
-    echo "✔ Typing: Disable press-and-hold for keys in favor of key repeat"
-        defaults write NSGlobalDomain ApplePressAndHoldEnabled -bool false
-    printDivider
-
-    echo "✔ Finder: Show status bar and path bar"
-        defaults write com.apple.finder ShowStatusBar -bool true
-        defaults write com.apple.finder ShowPathbar -bool true
-    echo "✔ Finder: Disable the warning when changing a file extension"
-        defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
-    echo "✔ Finder: Show the ~/Library folder"
-        chflags nohidden ~/Library
-    printDivider
-
-    echo "✔ Safari: Enable Safari’s Developer Settings"
-        defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
-        defaults write com.apple.Safari IncludeDevelopMenu -bool true
-        defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
-        defaults write com.apple.Safari com.apple.Safari.ContentPageGroupIdentifier.WebKit2DeveloperExtrasEnabled -bool true
-        defaults write NSGlobalDomain WebKitDeveloperExtras -bool true
-    printDivider
-
-    echo "✔ Chrome: Disable the all too sensitive backswipe on Trackpads and Magic Mice"
-        defaults write com.google.Chrome AppleEnableSwipeNavigateWithScrolls -bool false
-        defaults write com.google.Chrome.canary AppleEnableSwipeNavigateWithScrolls -bool false
-        defaults write com.google.Chrome AppleEnableMouseSwipeNavigateWithScrolls -bool false
-        defaults write com.google.Chrome.canary AppleEnableMouseSwipeNavigateWithScrolls -bool false
-    echo "✔ Chrome: Use the system print dialog and expand dialog by default"
-        defaults write com.google.Chrome DisablePrintPreview -bool true
-        defaults write com.google.Chrome.canary DisablePrintPreview -bool true
-        defaults write com.google.Chrome PMPrintingExpandedStateForPrint2 -bool true
-        defaults write com.google.Chrome.canary PMPrintingExpandedStateForPrint2 -bool true
-printDivider
-
 
 
 #===============================================================================
@@ -450,7 +367,7 @@ git config --global url."git@github.com:".insteadOf https://github.com/
 
 printDivider
     echo "✔ Set Git to store credentials in Keychain"
-    git config --global credential.helper osxkeychain
+    git config --global credential.helper cache --timeout 1800
 printDivider
     if [ -n "$(git config --global user.email)" ]; then
         echo "✔ Git email is set to $(git config --global user.email)"
@@ -467,7 +384,10 @@ printDivider
     fi
 printDivider
 
+#Set up GitHub
+printHeading "Installing GitHub CLI (gh)"
 
+conda install gh
 
 #===============================================================================
 #  Installer: Complete
